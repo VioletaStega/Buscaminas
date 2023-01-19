@@ -16,6 +16,14 @@ public class ButtonScript : MonoBehaviour
 
     public void Click()
     {
+        //Evitar que al primer click salga una bomba
+        if (GameManager.gm.firstClick)
+        {
+            bomb = false;
+            GameManager.gm.firstClick = false;
+        }
+
+        //Evitamos que nos salga un bucle infinto, al hacer ClickAround()
         if (GetComponent<Button>().interactable == false)
         {
             return;

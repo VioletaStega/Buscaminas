@@ -12,16 +12,18 @@ public class GameManager : MonoBehaviour
     public GameObject gameButton;
     public GameObject gamePanel;
     public GameObject winPanel;
+    public GameObject menuPanel;
 
     PointerEventData myPointer;
     public GraphicRaycaster myRaycaster;
 
-    public int width,
-               height;
+    int width,
+        height;
     int bombsAmount,
         counter;
 
     bool die;
+    public bool firstClick;
 
     public Image imageEmoji;
     public Sprite[] imageSprite;
@@ -30,14 +32,10 @@ public class GameManager : MonoBehaviour
     
     // Start is called before the first frame update
     void Start()
-    {
-        NumbersOfBombs();
-        gm = this;
-        map = new ButtonScript[width, height];
+    {        
+        gm = this;        
         die = false;
-        counter = (width * height) - bombsAmount;
-        CreateButtons();
-        CreateBombs();
+        firstClick = true;    
     }
 
     // Update is called once per frame
@@ -46,7 +44,40 @@ public class GameManager : MonoBehaviour
         DialButton();
     }
 
-    private void CreateButtons()
+    public void StartGame()
+    {
+        NumbersOfBombs();
+        map = new ButtonScript[width, height];
+        counter = (width * height) - bombsAmount;
+        CreateButtons();
+        CreateBombs();
+    }
+    
+    public void DifficultySelector(int num)
+    {
+        switch (num)
+        {
+            case 1:
+                width = 5;
+                height = 5;
+                menuPanel.SetActive(false);
+                break;
+            case 2:
+                width = 10;
+                height = 10;
+                menuPanel.SetActive(false);
+                break;
+            case 3:
+                width = 20;
+                height = 10;
+                menuPanel.SetActive(false);
+                break;
+            default:
+                break;
+        }
+        StartGame();
+    }
+    public void CreateButtons()
     {
         gamePanel.GetComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gamePanel.GetComponent<GridLayoutGroup>().constraintCount = width;
@@ -76,10 +107,9 @@ public class GameManager : MonoBehaviour
             else
             {
                 map[x, y].bomb = true;
-            }            
+            }
         }
     }
-
 
     public void ClickAround(int x, int y)
     {
